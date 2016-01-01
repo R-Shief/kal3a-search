@@ -10,26 +10,24 @@
  */
 angular
   .module('kal3aSearchApp', [
-    'ngAnimate',
-    'ngCookies',
-    'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch'
+      'ngAnimate',
+      'ngCookies',
+      'ngResource',
+      'ngRoute',
+      'ngSanitize',
+      'ngTouch',
+      'n3-charts.linechart',
+      'elasticsearch',
+      'CornerCouch',
+      'ui.bootstrap'
   ])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
+      .when('/search', {
+        templateUrl: 'views/search.html',
+        controller: 'SearchCtrl'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/search'
       });
   });
