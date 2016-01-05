@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="kal3aSearchApp">
   <head>
     <meta charset="utf-8">
     <title></title>
@@ -15,43 +15,60 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="kal3aSearchApp">
+  <body ng-controller="SearchCtrl">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
     <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
           <div class="navbar-header">
-
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
+              <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
             </button>
-
             <a class="navbar-brand" href="#/">kal3a</a>
           </div>
 
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
-
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#/search">Search</a></li>
-            </ul>
+            <form class="navbar-form navbar-left" role="search">
+              <div class="form-group">
+                <label class="control-label sr-only required" for="form_queryTerm">Query term</label>
+                <input type="search" id="form_queryTerm" required="required" placeholder="Search" class="form-control" ng-model="queryTerm">
+              </div>
+              <div class="form-group">
+                <label class="control-label sr-only">From</label>
+                <input type="date" ng-model="published_lower">
+              </div>
+              <div class="form-group">
+                <label class="control-label sr-only">To</label>
+                <input type="date" ng-model="published_upper">
+              </div>
+              <span ng-controller="LimitModalCtrl">
+                <a title="change result set size" class="btn btn-default" ng-click="open()">{{ pager.limit }}</a>
+              </span>
+              <div class="btn-group" role="group">
+              <button data-toggle="tooltip" data-placement="bottom" title="Sort Ascending" type="button" class="btn btn-default" ng-model="sort" btn-radio="'asc'"><i class="glyphicon glyphicon-sort-by-attributes-alt fa-flip-vertical"></i></button>
+              <button data-toggle="tooltip" data-placement="bottom" title="Sort Descending" type="button" class="btn btn-default" ng-model="sort" btn-radio="'desc'"><i class="glyphicon glyphicon-sort-by-attributes-alt"></i></button>
+              <button data-toggle="tooltip" data-placement="bottom" title="Sort by Relevance" type="button" class="btn btn-default" ng-model="sort" btn-radio="'_score'"><i class="glyphicon glyphicon-sort-by-order-alt"></i></button>
+              </div>
+              {{ results.hits.total }} Results
+              <button type="submit" class="btn btn-default" ng-disabled="loading">
+                <span ng-show="loading"><i class="fa fa-spinner fa-spin"></i> Updating</span>
+                <span ng-show="!loading"><i class="glyphicon glyphicon-search"></i> Search</span>
+              </button>
+            </form>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container">
-    <div ng-view=""></div>
+    <div class="container-fluid" ng-include="'views/search.html'">
     </div>
 
     <div class="footer">
-      <div class="container">
+      <div class="container-fluid">
       </div>
     </div>
     <script type="text/javascript" src="http://localhost:8000/bundles/fosjsrouting/js/router.js"></script>

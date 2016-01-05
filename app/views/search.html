@@ -1,26 +1,5 @@
-<form class="form-inline" role="search">
-    <div class="form-group"><label class="control-label sr-only required" for="form_queryTerm">Query term</label><input
-            type="search" id="form_queryTerm" required="required"
-            placeholder="Search our Archive | إبحث أرشيف" class="form-control" value="bang" ng-model="queryTerm"></div>
-    <div class="form-group"><label class="control-label sr-only">From</label>
-        <div id="form_published_lower"><input type="date" ng-model="published_lower"></div>
-    </div>
-    <div class="form-group"><label class="control-label sr-only">To</label>
-        <div id="form_published_upper"><input type="date" ng-model="published_upper"></div>
-    </div>
-    <button type="submit" id="form_search" name="form[search]"><i class="glyphicon glyphicon-search"></i></button>
-    <span ng-controller="LimitModalCtrl"><a title="change result set size" class="btn btn-default" ng-click="open()">{{ pager.limit }}</a></span>
-    <a id="changeResults" title="change result set size" data-toggle="modal" data-target="#modal-results">
-        Results
-    </a>
-
-    <button data-toggle="tooltip" data-placement="bottom" title="Sort Ascending" type="button" class="btn btn-default" ng-model="sort" btn-radio="'asc'"><i class="glyphicon glyphicon-sort-by-attributes-alt fa-flip-vertical"></i></button>
-    <button data-toggle="tooltip" data-placement="bottom" title="Sort Descending" type="button" class="btn btn-default" ng-model="sort" btn-radio="'desc'"><i class="glyphicon glyphicon-sort-by-attributes-alt"></i></button>
-    <button data-toggle="tooltip" data-placement="bottom" title="Sort by Relevance" type="button" class="btn btn-default" ng-model="sort" btn-radio="'_score'"><i class="glyphicon glyphicon-sort-by-order-alt"></i></button>
-    <span class="notify_loading" ng-show="loading"><i class="fa fa-spinner fa-spin"></i> Updating</span> {{ results.hits.total }} Results
-</form>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-sm-3">
         <div class="panel panel-default" ng-repeat="(key, value) in results.aggregations">
             <div class="panel-heading" data-toggle="collapse" data-target="#facet-{{$index}}">
                 <h3 class="panel-title">{{ key }}</h3>
@@ -34,31 +13,23 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-9">
+    <div class="col-sm-9">
         <ul class="list-unstyled">
             <li ng-repeat="doc in results.hits.hits" class="media">
-                <div class="pull-left">
-                    <div class="thumbnail">
-                        <span class="helper"></span>
-                        <img ng-src="{{doc.castleView.thumbnailLink.href}}" alt="{{doc._source.name}}" />
-                    </div>
+                <div class="media-left">
+                    <img ng-src="{{doc.castleView.thumbnailLink.href}}" alt="{{doc._source.name}}" width="200" class="media-object" />
                 </div>
                 <div class="media-body">
                     <p class="author">
-                        <a ng-if="doc.castleView.authorLink" href="{{ doc.castleView.authorLink.href }}" target="_blank">
-                            {{ doc._source.authors[0].name }}
-                        </a>
-                    <span ng-if="!doc.castleView.authorLink">
-                        {{ doc._source.authors[0].name }}
-                    </span>
+                        <a ng-if="doc.castleView.authorLink" href="{{ doc.castleView.authorLink.href }}" target="_blank">{{ doc._source.authors[0].name }}</a>
+                        <span ng-if="!doc.castleView.authorLink">{{ doc._source.authors[0].name }}</span>
                     </p>
-                    <p class="date">
-                        <span>{{ doc._source.source.title.text}}</span>
-                        <span>{{ doc._source.published | badDate | date:'medium' }}</span>
-                    </p>
+                    <p>{{ doc._source.source.title.text }} <span>{{ doc._source.published | badDate | date:'medium' }}</span></p>
                     <p>
-                        <a ng-if="doc.castleView.alternateLink" ng-bind-html="doc._source.title.text | unsafe" ng-href="{{ doc.castleView.alternateLink.href }}" target="_blank"></a>
-                        <span ng-if="!doc.castleView.alternateLink" ng-bind-html="doc._source.title.text | unsafe"></span>
+                        <a ng-if="doc.castleView.alternateLink" ng-href="{{ doc.castleView.alternateLink.href }}" target="_blank">
+                            {{ doc._source.title.text | unsafe }}
+                        </a>
+                        <span ng-if="!doc.castleView.alternateLink">{{ doc._source.title.text | unsafe }}</span>
                         <small ng-show="doc.castleView.canonicalLink">
                             <a ng-href="{{ doc.castleView.canonicalLink.href }}" target="_blank">
                                 <i class="glyphicon glyphicon-link"></i>
