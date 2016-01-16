@@ -39,11 +39,11 @@ angular.module('kal3aSearchApp')
                 DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
             val = val + '';
             format = format + '';
-            var i_val = 0;
-            var i_format = 0;
+            var i;
+            var iVal = 0;
+            var iFormat = 0;
             var c = '';
             var token = '';
-            var token2 = '';
             var x, y;
             var now = new Date();
             var year = now.getYear();
@@ -54,12 +54,12 @@ angular.module('kal3aSearchApp')
             var ss = now.getSeconds();
             var ampm = '';
 
-            while (i_format < format.length) {
+            while (iFormat < format.length) {
                 // Get next token from format string
-                c = format.charAt(i_format);
+                c = format.charAt(iFormat);
                 token = '';
-                while ((format.charAt(i_format) === c) && (i_format < format.length)) {
-                    token += format.charAt(i_format++);
+                while ((format.charAt(iFormat) === c) && (iFormat < format.length)) {
+                    token += format.charAt(iFormat++);
                 }
                 // Extract contents of value based on format token
                 if (token === 'yyyy' || token === 'yy' || token === 'y') {
@@ -75,11 +75,11 @@ angular.module('kal3aSearchApp')
                         x = 2;
                         y = 4;
                     }
-                    year = _getInt(val, i_val, x, y);
+                    year = _getInt(val, iVal, x, y);
                     if (year === null) {
                         return 0;
                     }
-                    i_val += year.length;
+                    iVal += year.length;
                     if (year.length === 2) {
                         if (year > 70) {
                             year = 1900 + (year - 0);
@@ -91,15 +91,15 @@ angular.module('kal3aSearchApp')
                 }
                 else if (token === 'MMM' || token === 'NNN') {
                     month = 0;
-                    for (var i = 0; i < MONTH_NAMES.length; i++) {
-                        var month_name = MONTH_NAMES[i];
-                        if (val.substring(i_val, i_val + month_name.length).toLowerCase() === month_name.toLowerCase()) {
+                    for (i = 0; i < MONTH_NAMES.length; i++) {
+                        var monthName = MONTH_NAMES[i];
+                        if (val.substring(iVal, iVal + monthName.length).toLowerCase() === monthName.toLowerCase()) {
                             if (token === 'MMM' || (token === 'NNN' && i > 11)) {
                                 month = i + 1;
                                 if (month > 12) {
                                     month -= 12;
                                 }
-                                i_val += month_name.length;
+                                iVal += monthName.length;
                                 break;
                             }
                         }
@@ -109,94 +109,94 @@ angular.module('kal3aSearchApp')
                     }
                 }
                 else if (token === 'EE' || token === 'E') {
-                    for (var i = 0; i < DAY_NAMES.length; i++) {
-                        var day_name = DAY_NAMES[i];
-                        if (val.substring(i_val, i_val + day_name.length).toLowerCase() === day_name.toLowerCase()) {
-                            i_val += day_name.length;
+                    for (i = 0; i < DAY_NAMES.length; i++) {
+                        var dayName = DAY_NAMES[i];
+                        if (val.substring(iVal, iVal + dayName.length).toLowerCase() === dayName.toLowerCase()) {
+                            iVal += dayName.length;
                             break;
                         }
                     }
                 }
                 else if (token === 'MM' || token === 'M') {
-                    month = _getInt(val, i_val, token.length, 2);
+                    month = _getInt(val, iVal, token.length, 2);
                     if (month === null || (month < 1) || (month > 12)) {
                         return 0;
                     }
-                    i_val += month.length;
+                    iVal += month.length;
                 }
                 else if (token === 'dd' || token === 'd') {
-                    date = _getInt(val, i_val, token.length, 2);
+                    date = _getInt(val, iVal, token.length, 2);
                     if (date === null || (date < 1) || (date > 31)) {
                         return 0;
                     }
-                    i_val += date.length;
+                    iVal += date.length;
                 }
                 else if (token === 'hh' || token === 'h') {
-                    hh = _getInt(val, i_val, token.length, 2);
+                    hh = _getInt(val, iVal, token.length, 2);
                     if (hh === null || (hh < 1) || (hh > 12)) {
                         return 0;
                     }
-                    i_val += hh.length;
+                    iVal += hh.length;
                 }
                 else if (token === 'HH' || token === 'H') {
-                    hh = _getInt(val, i_val, token.length, 2);
+                    hh = _getInt(val, iVal, token.length, 2);
                     if (hh === null || (hh < 0) || (hh > 23)) {
                         return 0;
                     }
-                    i_val += hh.length;
+                    iVal += hh.length;
                 }
                 else if (token === 'KK' || token === 'K') {
-                    hh = _getInt(val, i_val, token.length, 2);
+                    hh = _getInt(val, iVal, token.length, 2);
                     if (hh === null || (hh < 0) || (hh > 11)) {
                         return 0;
                     }
-                    i_val += hh.length;
+                    iVal += hh.length;
                 }
                 else if (token === 'kk' || token === 'k') {
-                    hh = _getInt(val, i_val, token.length, 2);
+                    hh = _getInt(val, iVal, token.length, 2);
                     if (hh === null || (hh < 1) || (hh > 24)) {
                         return 0;
                     }
-                    i_val += hh.length;
+                    iVal += hh.length;
                     hh--;
                 }
                 else if (token === 'mm' || token === 'm') {
-                    mm = _getInt(val, i_val, token.length, 2);
+                    mm = _getInt(val, iVal, token.length, 2);
                     if (mm === null || (mm < 0) || (mm > 59)) {
                         return 0;
                     }
-                    i_val += mm.length;
+                    iVal += mm.length;
                 }
                 else if (token === 'ss' || token === 's') {
-                    ss = _getInt(val, i_val, token.length, 2);
+                    ss = _getInt(val, iVal, token.length, 2);
                     if (ss === null || (ss < 0) || (ss > 59)) {
                         return 0;
                     }
-                    i_val += ss.length;
+                    iVal += ss.length;
                 }
                 else if (token === 'a') {
-                    if (val.substring(i_val, i_val + 2).toLowerCase() === 'am') {
+                    if (val.substring(iVal, iVal + 2).toLowerCase() === 'am') {
                         ampm = 'AM';
                     }
-                    else if (val.substring(i_val, i_val + 2).toLowerCase() === 'pm') {
+                    else if (val.substring(iVal, iVal + 2).toLowerCase() === 'pm') {
                         ampm = 'PM';
                     }
                     else {
                         return 0;
                     }
-                    i_val += 2;
+                    iVal += 2;
                 }
                 else {
-                    if (val.substring(i_val, i_val + token.length) != token) {
+                    if (val.substring(iVal, iVal + token.length) !== token) {
                         return 0;
                     }
                     else {
-                        i_val += token.length;
+                        iVal += token.length;
                     }
                 }
             }
             // If there are any trailing characters left in the value, it doesn't match
-            if (i_val != val.length) {
+            if (iVal !== val.length) {
                 return 0;
             }
             // Is date valid for month?
