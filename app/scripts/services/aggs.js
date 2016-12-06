@@ -9,8 +9,8 @@
  */
 angular.module('kal3aSearchApp')
   .constant('aggs', {
-      authors: { terms: { field: 'authors.name' } },
-      categories: { terms: { field: 'categories.term' } },
+      authors: { terms: { field: 'authors.name.keyword' } },
+      categories: { terms: { field: 'categories.term.keyword' } },
       lang: { terms: { field: 'lang' } },
       source: { terms: { field: 'source.title.text' } }
   });
