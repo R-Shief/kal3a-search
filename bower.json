@@ -2,22 +2,34 @@
   "name": "kal3a-search",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "~1.4.0",
+    "angular": "^1.4.0",
     "bootstrap-sass-official": "^3.2.0",
-    "angular-sanitize": "~1.4.0",
-    "angular-route": "~1.4.0",
-    "elasticui": "master",
-    "angular-bootstrap": "~1.0",
-    "angular-component": "https://github.com/toddmotto/angular-component.git",
-    "font-awesome": "~4.2.0",
-    "underscore": "~1.8.3"
+    "angular-sanitize": "^1.4.0",
+    "angular-route": "^1.4.0",
+    "elastic.js": "git@github.com:ErwanPigneul/elastic.js.git",
+    "elasticui": "git@github.com:R-Shief/ElasticUI.git#develop",
+    "angular-bootstrap": "^1.0",
+    "font-awesome": "^4.2.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "angular-mocks": "~1.4.0"
+    "angular-mocks": "^1.4.0"
   },
   "appPath": "app",
   "moduleName": "kal3aSearchApp",
   "overrides": {
+    "bootstrap": {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "scss/font-awesome.scss"
+      ]
+    },
     "bootstrap-sass-official": {
       "main": [
         "assets/stylesheets/_bootstrap.scss"
