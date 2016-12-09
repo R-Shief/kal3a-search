@@ -9,12 +9,12 @@
  * Main module of the application.
  */
 angular
-  .module('kal3aSearchApp', [
-      'ngSanitize',
-      'ngRoute',
-      'elasticui',
-      'ui.bootstrap'
-  ])
+    .module('kal3aSearchApp', [
+        'ngSanitize',
+        'ngRoute',
+        'elasticui',
+        'ui.bootstrap'
+    ])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/', {

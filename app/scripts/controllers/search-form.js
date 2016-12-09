@@ -10,6 +10,6 @@
 angular.module('kal3aSearchApp')
   .controller('SearchFormCtrl', ['searchQuery', function (searchQuery) {
       this.query = searchQuery;
-      this.search = function (query) {
+      this.search = function () {
       };
   }]);
