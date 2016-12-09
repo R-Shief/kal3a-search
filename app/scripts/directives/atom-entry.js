@@ -12,38 +12,41 @@ angular.module('kal3aSearchApp')
             entry: '='
         },
         controller: ['_', function (_) {
+            this.$onInit = function () {
 
-            var thumbnailLink, authorLink, canonicalLink, alternateLink, displayLinks;
-            thumbnailLink = _.findWhere(this.entry.links, {rel: 'thumbnail'}) ||
-                _.findWhere(this.entry.links, {rel: 'image'}) ||
-                _.findWhere(this.entry.links, {type: 'image'}) ||
-                _.findWhere(this.entry.links, {rel: 'author thumbnail'}) ||
-                {href: 'http://placehold.it/96x96'};
 
-            authorLink = _.findWhere(this.entry.links, {rel: 'author'});
+                var thumbnailLink, authorLink, canonicalLink, alternateLink, displayLinks;
+                thumbnailLink = _.findWhere(this.entry.links, {rel: 'thumbnail'}) ||
+                    _.findWhere(this.entry.links, {rel: 'image'}) ||
+                    _.findWhere(this.entry.links, {type: 'image'}) ||
+                    _.findWhere(this.entry.links, {rel: 'author thumbnail'}) ||
+                    {href: 'http://placehold.it/96x96'};
 
-            canonicalLink = _.findWhere(this.entry.links, {rel: 'canonical'});
+                authorLink = _.findWhere(this.entry.links, {rel: 'author'});
 
-            alternateLink = _.findWhere(this.entry.links, {rel: 'alternate'}) || _.findWhere(this.entry.links, {rel: ''});
+                canonicalLink = _.findWhere(this.entry.links, {rel: 'canonical'});
 
-            displayLinks = _.without(this.entry.links, thumbnailLink, authorLink, canonicalLink, alternateLink);
+                alternateLink = _.findWhere(this.entry.links, {rel: 'alternate'}) || _.findWhere(this.entry.links, {rel: ''});
 
-            angular.forEach(displayLinks, function (link) {
-                if (!link.hasOwnProperty('title')) {
-                    link.title = link.href;
-                }
-                if (link.hasOwnProperty('rel') && link.rel === 'canonical') {
-                    link.title = link.rel;
-                }
-            });
+                displayLinks = _.without(this.entry.links, thumbnailLink, authorLink, canonicalLink, alternateLink);
 
-            this.castleView = {
-                thumbnailLink: thumbnailLink,
-                authorLink: authorLink,
-                canonicalLink: canonicalLink,
-                alternateLink: alternateLink,
-                displayLinks: displayLinks
-            };
+                angular.forEach(displayLinks, function (link) {
+                    if (!link.hasOwnProperty('title')) {
+                        link.title = link.href;
+                    }
+                    if (link.hasOwnProperty('rel') && link.rel === 'canonical') {
+                        link.title = link.rel;
+                    }
+                });
+
+                this.castleView = {
+                    thumbnailLink: thumbnailLink,
+                    authorLink: authorLink,
+                    canonicalLink: canonicalLink,
+                    alternateLink: alternateLink,
+                    displayLinks: displayLinks
+                };
+            }
 
 
         }],
