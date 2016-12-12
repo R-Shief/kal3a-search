@@ -12,5 +12,5 @@ angular.module('kal3aSearchApp')
       authors: { terms: { field: 'authors.name.keyword' } },
       categories: { terms: { field: 'categories.term.keyword' } },
       lang: { terms: { field: 'lang' } },
-      source: { terms: { field: 'source.title.text' } }
+      source: { terms: { field: 'source.title.text.keyword' } }
   });
