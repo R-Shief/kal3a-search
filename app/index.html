@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="kal3aSearchApp">
+<html>
   <head>
     <meta charset="utf-8">
     <title></title>
@@ -8,14 +8,13 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-controller="SearchCtrl">
+  <body ng-app="kal3aSearchApp" eui-index="'elasticsearch'">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -25,81 +24,115 @@
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+            <button type="button" class="navbar-toggle" ng-click="isOpen = !isOpen">
               <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#/">kal3a</a>
           </div>
 
-          <div class="collapse navbar-collapse" id="js-navbar-collapse">
-            <form class="navbar-form navbar-left" role="search">
+          <div class="collapse navbar-collapse" uib-collapse="!isOpen">
+            <form class="navbar-form navbar-left" role="search" ng-controller="SearchFormCtrl as form">
               <div class="form-group">
                 <label class="control-label sr-only required" for="form_queryTerm">Query term</label>
-                <input type="search" id="form_queryTerm" required="required" placeholder="Search" class="form-control" ng-model="queryTerm">
+                <input type="search" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" eui-query="ejs.MatchQuery('_all', form.query.queryString)" eui-enabled="form.query.queryString.length" ng-model="form.query.queryString" id="form_queryTerm" required="required" placeholder="Search" class="form-control"/>
+              </div>
+              <div class="form-group" eui-filter="ejs.RangeFilter('published').from(form.query.published.lower).to(form.query.published.upper)" eui-enabled="form.query.published.lower && form.query.published.upper">
+                <div class="input-group">
+                  <label class="control-label sr-only" for="published_lower">From</label>
+                  <input id="published_lower" type="date" class="form-control" uib-datepicker-popup placeholder="Start date"
+                         ng-model="form.query.published.lower" is-open="popup1.opened" show-button-bar="false" ng-required="true"
+                         close-text="Close" show-weeks="false"/>
+                            <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="popup1.opened = true">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                              </button>
+                            </span>
+                </div>
+                <div class="input-group">
+                  <label class="control-label sr-only">To</label>
+                  <input type="date" class="form-control" uib-datepicker-popup placeholder="End date"
+                         ng-model="form.query.published.upper" is-open="popup2.opened" show-button-bar="false" ng-required="true"
+                         close-text="Close" show-weeks="false"/>
+                            <span class="input-group-btn">
+                              <button type="button" class="btn btn-default" ng-click="popup2.opened = true">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                              </button>
+                            </span>
+                </div>
               </div>
               <div class="form-group">
-                <label class="control-label sr-only">From</label>
-                <input type="date" ng-model="published_lower">
+                <label class="control-label sr-only required">Page size</label>
+                <input type="number" class="form-control" ng-model="indexVM.pageSize">
               </div>
-              <div class="form-group">
-                <label class="control-label sr-only">To</label>
-                <input type="date" ng-model="published_upper">
+              <div class="btn-group" role="group" eui-sort="ejs.Sort(form.query.sort.field).order(form.query.sort.order)" eui-enabled="true">
+                <button title="Sort Ascending" type="button"
+                        class="btn btn-default" ng-model="form.query.sort"
+                        uib-btn-radio="{field: 'published', order:'asc'}"><i
+                        class="glyphicon glyphicon-sort-by-attributes-alt fa-flip-vertical"></i></button>
+                <button title="Sort Descending" type="button"
+                        class="btn btn-default" ng-model="form.query.sort"
+                        uib-btn-radio="{field: 'published', order:'desc'}"><i
+                        class="glyphicon glyphicon-sort-by-attributes-alt"></i></button>
+                <button title="Sort by Relevance" type="button"
+                        class="btn btn-default" ng-model="form.query.sort" uib-btn-radio="{field: '_score', order: 'desc'}"><i
+                        class="glyphicon glyphicon-sort-by-order-alt"></i></button>
               </div>
-              <span ng-controller="LimitModalCtrl">
-                <a title="change result set size" class="btn btn-default" ng-click="open()">{{ pager.limit }}</a>
-              </span>
-              <div class="btn-group" role="group">
-              <button data-toggle="tooltip" data-placement="bottom" title="Sort Ascending" type="button" class="btn btn-default" ng-model="sort" btn-radio="'asc'"><i class="glyphicon glyphicon-sort-by-attributes-alt fa-flip-vertical"></i></button>
-              <button data-toggle="tooltip" data-placement="bottom" title="Sort Descending" type="button" class="btn btn-default" ng-model="sort" btn-radio="'desc'"><i class="glyphicon glyphicon-sort-by-attributes-alt"></i></button>
-              <button data-toggle="tooltip" data-placement="bottom" title="Sort by Relevance" type="button" class="btn btn-default" ng-model="sort" btn-radio="'_score'"><i class="glyphicon glyphicon-sort-by-order-alt"></i></button>
-              </div>
-              {{ results.hits.total }} Results
-              <button type="submit" class="btn btn-default" ng-disabled="loading">
-                <span ng-show="loading"><i class="fa fa-spinner fa-spin"></i> Updating</span>
-                <span ng-show="!loading"><i class="glyphicon glyphicon-search"></i> Search</span>
+              <button type="submit" class="btn btn-default" ng-click="form.search(form.query)">
+                <span ng-show="!indexVM.loaded"><i class="fa fa-spinner fa-spin"></i> Updating</span>
+                <span ng-show="indexVM.loaded"><i class="glyphicon glyphicon-search"></i> Search</span>
               </button>
             </form>
-          </div>
-        </div>
+            <p class="navbar-text">{{ indexVM.results.hits.total }} results <span ng-if="indexVM.results.hits.total">between
+              <span eui-aggregation="ejs.MinAggregation('min_published').field('published')" eui-enabled="indexVM.results.hits.total > 0">{{ aggResult.value_as_string | badDate | date:'short' }}</span> —
+              <span eui-aggregation="ejs.MaxAggregation('max_published').field('published')" eui-enabled="indexVM.results.hits.total > 0">{{ aggResult.value_as_string | badDate | date:'short' }}</span>
+              </span>
+            </p>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="container-fluid" ng-include="'views/search.html'">
+    <div class="container-fluid">
+      <ng-view></ng-view>
     </div>
 
     <div class="footer">
-      <div class="container-fluid">
-      </div>
+      <div class="container-fluid"></div>
     </div>
-    <script src="http://localhost:8000/bundles/fosjsrouting/js/router.js"></script>
-    <script src="http://localhost:8000/js/routing?callback=fos.Router.setData"></script>
+    <script src="<!-- @echo KAL3A_TARGET -->/bundles/fosjsrouting/js/router.js"></script>
+    <script src="<!-- @echo KAL3A_TARGET -->/js/routing?callback=fos.Router.setData"></script>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/elasticsearch/elasticsearch.angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/elastic.js/dist/elastic.js"></script>
-    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/elasticsearch/elasticsearch.angular.js"></script>
+    <script src="bower_components/elasticui/dist/elasticui.min.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/search.js"></script>
-        <script src="scripts/controllers/term-facet.js"></script>
-        <script src="scripts/services/es.js"></script>
         <script src="scripts/services/fos-routing.js"></script>
         <script src="scripts/controllers/help-modal.js"></script>
-        <script src="scripts/controllers/limit-modal.js"></script>
         <script src="scripts/filters/directionality.js"></script>
         <script src="scripts/filters/bad-date.js"></script>
         <script src="scripts/filters/unsafe.js"></script>
-        <script src="scripts/filters/twitter-profile.js"></script>
-        <script src="scripts/services/collection-types.js"></script>
+        <script src="scripts/controllers/search-form.js"></script>
+        <script src="scripts/services/search-query.js"></script>
+        <script src="scripts/services/aggs.js"></script>
+        <script src="scripts/services/eui-host.js"></script>
+        <script src="scripts/directives/atom-text-construct.js"></script>
+        <script src="scripts/directives/atom-entry.js"></script>
+        <script src="scripts/services/underscore.js"></script>
+        <script src="scripts/directives/date-histogram-agg.js"></script>
         <!-- endbuild -->
 </body>
 </html>
