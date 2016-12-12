@@ -13,7 +13,8 @@ angular
         'ngSanitize',
         'ngRoute',
         'elasticui',
-        'ui.bootstrap'
+        'ui.bootstrap',
+        'angularMoment'
     ])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider

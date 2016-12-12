@@ -11,7 +11,7 @@ angular.module('kal3aSearchApp')
         bindings: {
             entry: '='
         },
-        controller: ['_', function (_) {
+        controller: ['_', 'moment', function (_, moment) {
             this.$onInit = function () {
 
 
@@ -40,6 +40,7 @@ angular.module('kal3aSearchApp')
                 });
 
                 this.castleView = {
+                    published: moment(this.entry.published).toDate(),
                     thumbnailLink: thumbnailLink,
                     authorLink: authorLink,
                     canonicalLink: canonicalLink,
@@ -47,20 +48,28 @@ angular.module('kal3aSearchApp')
                     displayLinks: displayLinks
                 };
             }
-
-
         }],
         template: function () {
             return [
+                '<div class="media well well-sm">',
+
                 '<div class="media-left">',
                 '<img ng-src="{{$ctrl.castleView.thumbnailLink.href}}" alt="{{$ctrl.entry.name}}" width="200" class="media-object" />',
                 '</div>',
+
                 '<div class="media-body">',
                 '<p class="author">',
-                '<a ng-if="$ctrl.castleView.authorLink" href="{{ $ctrl.castleView.authorLink.href }}" target="_blank">{{ $ctrl.entry.authors[0].name }}</a>',
+                '<a ng-if="$ctrl.castleView.authorLink" ng-href="{{ $ctrl.castleView.authorLink.href }}" target="_blank">',
+                '{{ $ctrl.entry.authors[0].name }}',
+                '</a>',
                 '<span ng-if="!$ctrl.castleView.authorLink">{{ $ctrl.entry.authors[0].name }}</span>',
                 '</p>',
-                '<p>{{ $ctrl.entry.source.title.text }} <span>{{ $ctrl.entry.published | badDate | date:\'medium\' }}</span></p>',
+
+                '<p>',
+                '{{ $ctrl.entry.source.title.text }}',
+                '<span>{{ $ctrl.castleView.published | date:\'medium\' }}</span>',
+                '</p>',
+
                 '<p>',
                 '<a ng-if="$ctrl.castleView.alternateLink" ng-href="{{ $ctrl.castleView.alternateLink.href }}" target="_blank">',
                 '{{ $ctrl.entry.title.text | unsafe }}',
@@ -75,9 +84,10 @@ angular.module('kal3aSearchApp')
                 '<atom-text-construct ng-model="$ctrl.entry.summary"></atom-text-construct>',
                 '<ul>',
                 '<li ng-repeat="link in $ctrl.castleView.displayLinks">',
-                '<a rel="{{ link.rel }}" ng-href="{{ link.href }}" target="_blank">{{ link.title }}</a>',
+                '{{ link.rel }} <a rel="{{ link.rel }}" ng-href="{{ link.href }}" target="_blank">{{ link.title }}</a>',
                 '</li>',
                 '</ul>',
+                '</div>',
                 '</div>'
             ].join(' ');
         }
