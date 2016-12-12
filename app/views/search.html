@@ -2,7 +2,7 @@
     <div class="col-sm-3">
         <div class="panel panel-default" ng-repeat="agg in search.aggs">
             <div class="panel-heading" ng-click="isCollapsed = !isCollapsed">
-                <h3 class="panel-title">{{ agg.terms.field }}</h3>
+                <h3 class="panel-title">{{ search.headings[agg.terms.field] }}</h3>
             </div>
             <eui-checklist field="agg.terms.field" size="10" uib-collapse="isCollapsed"></eui-checklist>
         </div>
