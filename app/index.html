@@ -36,7 +36,7 @@
                 <label class="control-label sr-only required" for="form_queryTerm">Query term</label>
                 <input type="search" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" eui-query="ejs.MatchQuery('_all', form.query.queryString)" eui-enabled="form.query.queryString.length" ng-model="form.query.queryString" id="form_queryTerm" required="required" placeholder="Search" class="form-control"/>
               </div>
-              <div class="form-group" eui-filter="ejs.RangeFilter('published').from(form.query.published.lower.toJSON().substring(0,10) + ' 00:00:00.000000').to(form.query.published.upper.toJSON().substring(0,10) + ' 00:00:00.000000')" eui-enabled="form.query.published.lower && form.query.published.upper">
+              <div class="form-group" eui-filter="ejs.RangeFilter('published').from(form.query.published.lower).to(form.query.published.upper)" eui-enabled="form.query.published.lower && form.query.published.upper">
                 <div class="input-group">
                   <label class="control-label sr-only" for="published_lower">From</label>
                   <input id="published_lower" type="date" class="form-control" uib-datepicker-popup placeholder="Start date"
