@@ -9,7 +9,7 @@
     </div>
     <div class="col-sm-9">
         <ul class="list-unstyled">
-            <li ng-repeat="doc in indexVM.results.hits.hits" class="media">
+            <li ng-repeat="doc in indexVM.results.hits.hits">
                 <atom-entry entry="doc._source"></atom-entry>
             </li>
         </ul>
