@@ -13,6 +13,7 @@ angular.module('kal3aSearchApp')
           'authors.name.keyword': 'Author',
           'categories.term.keyword': 'Tag',
           'lang': 'Language',
-          'source.title.text.keyword' : 'Source'
+          'source.title.text.keyword' : 'Source',
+          'parameter_names.keyword' : 'Parameter Set'
       };
   }]);
