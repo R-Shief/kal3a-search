@@ -47,7 +47,7 @@ angular.module('kal3aSearchApp')
                     alternateLink: alternateLink,
                     displayLinks: displayLinks
                 };
-            }
+            };
         }],
         template: function () {
             return [
